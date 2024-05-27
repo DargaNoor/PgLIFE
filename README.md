@@ -1,5 +1,72 @@
 # PgLIFE
 
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.util.Arrays;
+
+public class CipherValueGenerator {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
+    public static void main(String[] args) throws Exception {
+        String username = "B000200206";
+        String password = "12345678";
+        String userToken = username + password;
+
+        // Step 1: Hash the input data using SHA-1
+        MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+        byte[] hashedData = sha1.digest(userToken.getBytes(StandardCharsets.UTF_8));
+
+        // Ensure the hashed data length is 194 bytes (16-byte blocks for AES)
+        // Add padding if necessary
+        int targetLength = 194;
+        byte[] paddedData = Arrays.copyOf(hashedData, targetLength);
+        if (hashedData.length < targetLength) {
+            Arrays.fill(paddedData, hashedData.length, targetLength, (byte) 0);
+        }
+
+        // Step 2: Encrypt the hashed data using AES-CBC 128
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        SecretKey secretKey = keyGen.generateKey();
+
+        // Generate a random IV (initialization vector)
+        byte[] iv = new byte[16];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(iv);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+        Cipher aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        aesCipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+
+        byte[] encryptedData = aesCipher.doFinal(paddedData);
+
+        // Step 3: Encode the encrypted data in Base64
+        byte[] encryptedDataWithIv = new byte[iv.length + encryptedData.length];
+        System.arraycopy(iv, 0, encryptedDataWithIv, 0, iv.length);
+        System.arraycopy(encryptedData, 0, encryptedDataWithIv, iv.length, encryptedData.length);
+
+        String base64CipherValue = Base64.encodeBase64String(encryptedDataWithIv);
+
+        // Output the cipher value and its length
+        System.out.println("Cipher Value: " + base64CipherValue);
+        System.out.println("Cipher Value Length: " + base64CipherValue.length());
+    }
+}
+
+
+
 This is website build for people who are searching for PG's nearby especially for Students. I did this during the training done at **Internshala Training** Course.
 Tools used are VSC, XAMPP. 
 Front-End technologies are done by using HTML,CSS,,BOOSTRAP,JS and Back-End by PHP,MYSQL.
