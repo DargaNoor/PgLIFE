@@ -1,5 +1,44 @@
 # PgLIFE
 
+import java.io.FileInputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import javax.crypto.Cipher;
+import java.util.Base64;
+
+public class RSAEncryption {
+
+    public static void main(String[] args) {
+        try {
+            // Load the public certificate
+            FileInputStream fis = new FileInputStream("path/to/public_cert.cer");
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            X509Certificate cert = (X509Certificate) cf.generateCertificate(fis);
+            PublicKey publicKey = cert.getPublicKey();
+
+            // Generate a random plaintext message
+            String plaintext = "Hello, this is a test message!";
+
+            // Encrypt the plaintext message
+            Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            byte[] encryptedMessage = cipher.doFinal(plaintext.getBytes());
+
+            // Print the encrypted message
+            String encryptedMessageBase64 = Base64.getEncoder().encodeToString(encryptedMessage);
+            System.out.println("Encrypted message (Base64): " + encryptedMessageBase64);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
