@@ -9,6 +9,105 @@ go through the address mentioned in the View option of particular PG. User can s
 Gender(Male, Female, Unisex). Once a user created account he/she can check once the entered details in the Dashboard Section.
 The details entered through the sign up form will be directly updated to the database MYSQL through PHP code. Only Admin has all access to the (those who have created accounts)members names, wishlist of PG's, passowrds etc.
 
+
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+
+public class AESCBC {
+
+    public static void main(String[] args) throws Exception {
+        // Provide your certificate in PEM format
+        String certificatePEM = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICsDCCAZigAwIBAgIJAIfXt9QOq3UbMA0GCSqGSIb3DQEBCwUAMB0xGzAZBgNV\n" +
+                "BAMMEkV4YW1wbGUgU2VsZi1TaWduZWQwHhcNMjQwNTIwMTIwMDAwWhcNMjUwNTIw\n" +
+                "MTIwMDAwWjAdMRswGQYDVQQDDBJFeGFtcGxlIFNlbGYtU2lnbmVkMIIBIjANBgkq\n" +
+                "hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKsZ4wEBwJ1Z4dFPgYfVFNf/WcFZrNxn\n" +
+                "rTe3y7On3JAVq/MC4uC82bQlFvOe7H0aWl3uQa9W/Lsc0/gHSHX1ZDH7pC/h8o2P\n" +
+                "v3Ug1uj0RDT4STPAFbyAD/y8Sy24yb5hxZ3xyciTxZdfuc5TgyGs5+4bwXO/YIZV\n" +
+                "5Yf8PSoE0VG2yqJ5/Vhb62BD5V0E0BMRf6Pax4PyVpqlAA6WZ0zHkc/cNkizP3Nx\n" +
+                "wNHZr+fiYc2WFXi2yw1/3JSIBgYZ/Rph9op0jIuYvnC0WhJMbXnxMLqzDdD1AAlP\n" +
+                "u+8/j38S8Ph8ZBZZBcZKFGflfp6/zUwvdGHkpT63mdNUZR8SzV8RZwIDAQABo1Aw\n" +
+                "TjAdBgNVHQ4EFgQU0NU8Pl4uShXqvTcWZRvXzoh0ZukwHwYDVR0jBBgwFoAU0NU8\n" +
+                "Pl4uShXqvTcWZRvXzoh0ZukwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC\n" +
+                "AQEAYK7Lht4+h2oN1+/ARAK6C0gRrBXNG2xXz3YQ+tKY+VC+z6mODkIlNrm4Sck5\n" +
+                "MHhvsFgH4t0+jZ4V+UOeBZp8o3HnGu5qwbO29p5nF6hTePLkI46IYhOB0IZF/pNz\n" +
+                "k9S6rdmHvlHn6MY9IvvvwW9U46Z5J0dLHzZEvij9gRo+0uJxjKYbDkqxvV4mSYI+\n" +
+                "+L2Trj0O9zZNgd8N5S8mW+DF+PZVZBb0FjU4uF2Vow6/mBhBQSVuoElJ/v4ITBvD\n" +
+                "Yc1zqRsKKfoVHSy3kt+1+YyoVYy3zRh+NmdZpYaAmkXMxnz4qljquVOT5GAH5v9f\n" +
+                "jY2jnt2hDqBRTpBXFZ7UsjyOQQ==\n" +
+                "-----END CERTIFICATE-----";
+
+        PublicKey publicKey = getPublicKeyFromCertificate(certificatePEM);
+
+        // Generate key and IV based on the public key
+        String key = generateKey(publicKey);
+        String iv = generateIV(publicKey);
+
+        String passwordDigest = "t6o9NKXqGb3iRx1zxgkvR0jbbJ4=";
+
+        // Encrypt the password digest using the generated key and IV
+        String encryptedPasswordDigest = encrypt(passwordDigest, key, iv);
+        System.out.println("Encrypted Password Digest: " + encryptedPasswordDigest);
+    }
+
+    public static PublicKey getPublicKeyFromCertificate(String certificatePEM) throws Exception {
+        String cleanCertificatePEM = certificatePEM
+                .replace("-----BEGIN CERTIFICATE-----", "")
+                .replace("-----END CERTIFICATE-----", "")
+                .replaceAll("\\s", "");
+
+        InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(cleanCertificatePEM));
+        PemReader pemReader = new PemReader(new java.io.InputStreamReader(inputStream));
+        PemObject pemObject = pemReader.readPemObject();
+        pemReader.close();
+
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(pemObject.getContent()));
+        return certificate.getPublicKey();
+    }
+
+    public static String generateKey(PublicKey publicKey) {
+        // Generate key based on the public key (implement your logic here)
+        // For example, you could use a hashing algorithm or some other derivation method
+        // Here, we'll just encode the public key bytes
+        return publicKey.toString().substring(0, 16); // Take the first 16 bytes as key
+    }
+
+    public static String generateIV(PublicKey publicKey) {
+        // Generate IV based on the public key (implement your logic here)
+        // Here, we'll just encode the public key bytes in reverse order
+        return new StringBuilder(publicKey.toString()).reverse().toString().substring(0, 16); // Take the first 16 bytes as IV
+    }
+
+    public static String encrypt(String value, String key, String iv) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes());
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+        byte
+	
+        byte[] encrypted = cipher.doFinal(value.getBytes());
+        return Base64.getEncoder().encodeToString(encrypted);
+    }
+}
+
+
+
+
+
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.KeyFactory;
