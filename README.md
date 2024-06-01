@@ -1,3 +1,6 @@
+https://cm.naukri.com/?redirect=https%3A%2F%2Fwww.naukri.com%2Fcampus%2Fcontests%2F31674%3Futm_campaign%3Dfn_contest_single_phase_reminder_mail_20240601%26utm_medium%3Dmail%26utm_source%3Dmail&data=%7B%22deviceType%22%3A%22WEB%22%2C%22additionalParams%22%3A%7B%7D%2C%22communicationId%22%3A%22665adbe127a086b7d0090ffc%22%2C%22clickPosition%22%3A3%2C%22communicationType%22%3A%22mail%22%2C%22userId%22%3A%22ca76be4fa60a6724005deef088d7585821c64c0deae47c5d113f03cb115cb3db%22%2C%22eventCode%22%3A%22fn_contest_single_phase_reminder_mail%22%2C%22encEmail%22%3A%2282ca133a28a72e051bb9d7403c90ea39c7177fdfe1b6414f7be69c5ab7e992269a86cc384cde9c370d99ad6a3af22255%22%2C%22mailType%22%3A%22fn_contest_single_phase_reminder_mail%22%2C%22mailerId%22%3A%22fn_contest_single_phase_reminder_mail_20240601%22%2C%22appId%22%3A330%2C%22tenantId%22%3A%221%22%2C%22eventName%22%3A%22communicationClick%22%7D
+
+
 # PgLIFE
 
 import java.io.FileInputStream;
