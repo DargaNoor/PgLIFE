@@ -1,3 +1,31 @@
+<configuration>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="SecureBinding">
+          <security mode="TransportWithMessageCredential">
+            <message clientCredentialType="UserName" />
+          </security>
+        </binding>
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="https://your-service-url"
+                binding="basicHttpBinding"
+                bindingConfiguration="SecureBinding"
+                contract="YourService.IYourService"
+                name="SecureServiceEndpoint">
+      </endpoint>
+    </client>
+  </system.serviceModel>
+</configuration>
+
+
+
+
+
+
+
 using System;
 using System.ServiceModel;
 
