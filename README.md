@@ -1,23 +1,3 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dit="http://iec.incometax.gov.in/ditsecws" xmlns:req="http://iec.incometax.gov.in/ditsecws/request">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <dit:getBankAtmGenEvcDetails>
-         <dit:DitRequest uniqueRequestId="B000200206-2224560007">
-            <req:pan>AEAPJ8518G</req:pan>
-            <req:atmId>?</req:atmId>
-            <req:atmCardNo>12386899</req:atmCardNo>
-            <req:bankAccNum>?</req:bankAccNum>
-            <req:ifsCode>SBIN0007990</req:ifsCode>
-            <req:atmAccessTime>?</req:atmAccessTime>
-            <req:accountName>?</req:accountName>
-            <req:accountType>?</req:accountType>
-            <req:accountStatus>?</req:accountStatus>
-            <req:emailId>?</req:emailId>
-            <req:mobileNumber>?</req:mobileNumber>
-         </dit:DitRequest>
-      </dit:getBankAtmGenEvcDetails>
-   </soapenv:Body>
-</soapenv:Envelope>
 # PgLIFE
 
 This is website build for people who are searching for PG's nearby especially for Students. I did this during the training done at **Internshala Training** Course.
